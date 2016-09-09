@@ -68,7 +68,7 @@ io.socket.on('message',function(data){
     		$('#opt3').removeAttr('disabled');
 			
 
-			$('#question').html(data.record.theQuestion);
+			$('#question').html((data.qnum+1)+" / "+data.numOfQuestions+" ) "+data.record.theQuestion);
 			$('#option0').html(data.record.options[0]);
 			$('#option1').html(data.record.options[1]);
 			$('#option2').html(data.record.options[2]);
@@ -88,7 +88,7 @@ io.socket.on('message',function(data){
 
 					clearInterval(countdown);
 					qnum+=1;
-					io.socket.put('/question/nextQuestion',{qnum:qnum});
+					io.socket.put('/question/nextQuestion',{qnum:qnum,numOfQuestions:data.numOfQuestions});
 				
 				}
 

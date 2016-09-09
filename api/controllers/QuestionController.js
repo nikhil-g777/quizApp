@@ -59,7 +59,7 @@ module.exports = {
 		// The reciever for this broadcast message is in app.js
 		 Question.find({}).exec(function(err,records){
 
-		 sails.sockets.broadcast('commonRoom',{identity:'question',record:records[req.body.qnum]});
+		 sails.sockets.broadcast('commonRoom',{identity:'question',record:records[req.body.qnum],qnum:req.body.qnum,numOfQuestions:records.length});
 		 console.log('broadcasting question');
 		 });
 	},
@@ -69,11 +69,11 @@ module.exports = {
 		var socketId = sails.sockets.getId(req);
 		console.log('next question by socketId :'+socketId+" with qnum :"+req.body.qnum);
 
-		if(req.body.qnum<3){
+		if(req.body.qnum<req.body.numOfQuestions){
 
 			 Question.findOne({number:req.body.qnum}).exec(function(err,records){
 
-			 sails.sockets.broadcast(socketId,{identity:'question',record:records,qnum:(req.body.qnum)});
+			 sails.sockets.broadcast(socketId,{identity:'question',record:records,qnum:(req.body.qnum),numOfQuestions:req.body.numOfQuestions});
 			 console.log('broadcasting question');
 		 	 });
 
@@ -82,8 +82,6 @@ module.exports = {
 		else{
 			console.log('complete\n\n');
 			sails.sockets.broadcast(socketId,{identity:'complete'});
-
-
 		}
 	},
 
@@ -118,12 +116,7 @@ module.exports = {
 						userId:record.id,
 						result:result
 					});
-
-
 			});		
-
 		});
-
-
 	}	
 };
