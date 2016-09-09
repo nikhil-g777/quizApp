@@ -50,7 +50,7 @@ module.exports = {
 
 		var socketId = sails.sockets.getId(req);
 
-		console.log('Reached Announce !!! \n \n');
+		console.log('Creating User !!! \n \n');
 
 		var session = req.session;
 
