@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+  <div id = "main">
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+           <a class="navbar-brand" href="#">Quiz</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+        </ul>
+      </div>
+  </nav>
+
+    <div class="row">
+
+      <div class="col-sm-6">
+<!--      <label for="usr"> My Name: </label>
+          <input type = "text" class="form-control" id="username" size = "30">  -->
+          <div class="panel panel-success">
+            <div class="panel-heading">My Id</div>
+            <div class="panel-body" id="username"></div>
+        </div>
+        <br><br>
+
+        Your Score : <span id="score"></span>
+        <br><br>
+
+        <div id="usersOnline">
+<!--          <select id="users-list" size="10"></select>   -->
+          <ul class="list-group" id="users-list">
+            <li class="list-group-item active">Users Online</li>
+            
+          </ul>
+        </div>
+        <br><br>
+        
+        <button id="startQuiz" type = "submit" class = "btn btn-success">Start Quiz</button>
+        <br><br>
+      </div>
+      
+      <div class="col-sm-6">
+        
+        Time Remaining : <span id="timer"></span><br><br> 
+        Question: <span id="question"></span><br><br>
+<!--        
+        <form id="radioButtonsForm">
+           <input type="radio" name="opt" value="0"><span id="option0"></span> <br>
+           <input type="radio" name="opt" value="1"><span id='option1'></span><br>
+           <input type="radio" name="opt" value="2"><span id='option2'></span><br>
+           <input type="radio" name="opt" value="3"><span id='option3'></span><br>   
+        </form><br>
+-->
+        <div class="btn-group" data-toggle="buttons-radio">
+          <button type="button" class="btn btn-primary" value="0" id="opt0"><span id="option0"></button>
+          <button type="button" class="btn btn-primary" value="1" id="opt1"><span id="option1"></button>
+          <button type="button" class="btn btn-primary" value="2" id="opt2"> <span id="option2"></button>
+          <button type="button" class="btn btn-primary" value="3" id="opt3"><span id="option3"></button>
+        </div>
+
+<!--        <button id="submit" type = "submit" class = "btn btn-success">Submit</button> -->
+        <br><br>
+        
+        Result : <span id="result"></span> 
+
+      </div>
+    
+    </div>
+
+  </div>
+
+</body>
+</html>
+  
