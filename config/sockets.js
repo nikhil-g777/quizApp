@@ -125,24 +125,30 @@ module.exports.sockets = {
    afterDisconnect: function(session, socket, cb) {
 
     console.log("Socket Disconnected!");
+    if(!socket){ return cb();}
+    try{
+          var userId = session.users[sails.sockets.getId(socket)].id;
 
-    var userId = session.users[sails.sockets.getId(socket)].id;
-
-    User.findOne(userId).exec(function(err,user){
-      if(err){
-        return cb();
-      }
-
-      User.destroy({id:user.id}).exec(function(err){
-        if(err){
+          User.findOne(userId).exec(function(err,user){
+          if(err){
           return cb();
-        }
+          }
+
+          User.destroy({id:user.id}).exec(function(err){
+          if(err){
+          return cb();
+          }
 
         User.publishDestroy(user.id);
 
       });
 
     });
+
+    }
+    catch(err){
+      console.log("no erroers now");
+    }
      // By default: do nothing.
      return cb();
    },

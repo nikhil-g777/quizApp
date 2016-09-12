@@ -12,21 +12,24 @@ io.socket.on('connect',function socketConnected(){
 			
 			var qnum = 0;
 
-			io.socket.get('/user/announce',function(data){
+			var userName = prompt("Enter your Name");
 
-			window.me = data;
+			if(userName!=='master'){
 
-			io.socket.get('/user',updateUserList);
 
-			displayUserId(data.id);
+				io.socket.put('/user/announce',{userName:userName},function(data){
 
-			displayScore(data.score);
-//
-// Coding Practice ???
-// pass the object or the value
-//
+				window.me = data;
 
-		});
+				io.socket.get('/user',updateUserList);
+
+				displayUserName(data);
+
+				displayScore(data);
+				
+				});
+
+			}
 
 
 
@@ -110,13 +113,13 @@ io.socket.on('message',function(data){
 				if(window.me.id == data.userId){
 					$('#result').html('Correct!');
 					io.socket.put('/user/updateScore',function(updated){
-						displayScore(updated[0].score);
+						displayScore(updated[0]);
+
 					});
-
-
 				}
 				else{
 					$('#result').html('Answered first correctly by : '+data.userId);
+//					$('#'+data.userId+'_score').html()
 				}
 			}
 			else{
@@ -128,6 +131,7 @@ io.socket.on('message',function(data){
 					$('#result').html('Wrong!');
 				}
 			}
+
 			break;
 
 		case 'complete':
@@ -139,7 +143,7 @@ io.socket.on('message',function(data){
 				records.forEach(function(data){
 					if(data.score>highestScore){
 						highestScore = data.score;
-						winner = data.id;
+						winner = data.name;
 						console.log('winner is' + winner);
 						console.log('score:'+highestScore);
 					}

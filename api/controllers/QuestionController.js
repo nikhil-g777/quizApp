@@ -118,5 +118,25 @@ module.exports = {
 					});
 			});		
 		});
+	},
+
+	createQuestion : function(req,res){
+		// Question.create({
+
+		// });
+
+		console.log(req.body.qn);
+		Question.create( {
+			number : req.body.qnumber,
+			theQuestion : req.body.qn,
+			options : [req.body.opt1,req.body.opt2,req.body.opt3,req.body.opt4],
+			answer : req.body.ans
+
+		}).exec(function(err,record){
+			if(err){ return res.serverError(err);}
+
+			console.log('Question '+record.number+' created !');
+		})
+
 	}	
 };

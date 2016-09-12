@@ -56,7 +56,7 @@ module.exports = {
 
 		session.users = session.users || {};
 
-		User.create({ name:"User-" + socketId,
+		User.create({ name:req.body.userName,
 					  socketId:socketId
 					}).exec(function(err,user){
 			if (err) {

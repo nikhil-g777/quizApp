@@ -4,9 +4,9 @@ function addUser(user){
 
 	var select = $('#users-list');
 
-	var option = $('<li class = "list-group-item "id="'+user.id+'"value="'+user.id+'"">'+user.id+'</li>');
-
-	console.log('adding user : '+ user.id);
+	var option = $('<li class = "list-group-item "id="'+user.id+'"value="'+user.name+'"">'+user.name+'</li>');
+//+'<span id = "'+user.id+'_score'+'"></span>'+user.score
+	console.log('adding user : '+ user.name);
 
 	select.append(option);
 }
@@ -24,10 +24,10 @@ function updateUserList(users){
 	});
 }
 
-function displayUserId(str){
-	$('#username').html(str);
+function displayUserName(user){
+	$('#username').html(user.name);
 }
 
-function displayScore(score){
-	$('#score').html(score);
+function displayScore(user){
+	$('#score').html(user.score);
 }
