@@ -37,8 +37,9 @@ module.exports = {
 			function(err,record){
 			console.log('old score:'+record.score);
 			var newScore = record.score + 1;
+			var correct = record.correct + 1;
 			console.log('new Score :'+newScore);
-			User.update({socketId:socketId},{score:newScore}).exec(function(err,updated){
+			User.update({socketId:socketId},{score:newScore,correct:correct}).exec(function(err,updated){
 																console.log('updated score:'+updated[0].score);
 																res.json(updated);
 															});
@@ -73,12 +74,47 @@ module.exports = {
 
 		sails.sockets.join(req,'commonRoom');
 
-		User.publishCreate(user,req);
+//		User.publishCreate(user,req);
 
 		res.json(user)
 
 		sails.log('response sent');
 	});
 
+	},
+
+	masterSubscribe : function(req,res){
+
+		var socketId = sails.sockets.getId(req);
+
+		sails.sockets.join(req,'masterRoom');
+
+		User.watch(req);
+	},
+
+	subscribeToInstance : function(req,res){
+
+		User.subscribe(req,req.body.data);
+
+	},
+
+	emitReady :function(req,res){
+
+		var socketId = sails.sockets.getId(req);
+		User.findOne({socketId:socketId}).exec(function(err,user){
+		sails.sockets.broadcast('masterRoom',{identity:'ready',user:user});
+
+		});
+	},
+
+	flushUsers : function(req,res){
+
+		User.destroy({}).exec(function(err){	
+			if(err){console.log("no previous records exist");}
+
+			console.log("All Users Destroyed !");
+		})
 	}
+
+
 }

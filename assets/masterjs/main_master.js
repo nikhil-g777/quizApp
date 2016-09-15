@@ -2,6 +2,20 @@ io.socket.on('connect',function socketConnected(){
 	
 	var master_qnum = 0;
 
+	io.socket.put('/question/flushQuestions');
+
+	// io.socket.on('user',function messageRecieved(message){
+
+	// 	switch(message.verb){
+
+	// 		case 'created' : 
+	// 			addUser(message.data);
+	// 			console.log("new user created");
+
+	// 	}
+
+	// });
+
 	$('#startQuestions').click(function(){	
 
 		$('#startQuestions').prop('disabled',true);
@@ -59,6 +73,10 @@ io.socket.on('connect',function socketConnected(){
 		$('#main').append('</form><br><br>');
 
 		master_qnum+=1;
+
+	});
+
+	$('#footer').on('click','#finish',function(){
 
 	});
 

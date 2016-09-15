@@ -31,3 +31,4 @@ function displayUserName(user){
 function displayScore(user){
 	$('#score').html(user.score);
 }
+

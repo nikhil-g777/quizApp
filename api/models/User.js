@@ -21,7 +21,17 @@ module.exports = {
 
   		type: 'integer',
   		defaultsTo : 0
-  	}
+  	},
+
+    ready:{
+      type:'boolean',
+      defaultsTo : false
+    },
+
+    correct :{
+      type:'integer',
+      defaultsTo: 0
+    }
 
   }
 };

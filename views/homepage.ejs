@@ -16,31 +16,6 @@
     <div class="row">
 
       <div class="col-sm-6">
-<!--      <label for="usr"> My Name: </label>
-          <input type = "text" class="form-control" id="username" size = "30">  -->
-          <div class="panel panel-success">
-            <div class="panel-heading">My Name</div>
-            <div class="panel-body" id="username"></div>
-        </div>
-        <br><br>
-
-        Your Score : <span id="score"></span>
-        <br><br>
-
-        <div id="usersOnline">
-<!--          <select id="users-list" size="10"></select>   -->
-          <ul class="list-group" id="users-list">
-            <li class="list-group-item active">Users Online</li>
-            
-          </ul>
-        </div>
-        <br><br>
-        
-        <button id="startQuiz" type = "submit" class = "btn btn-success">Start Quiz</button>
-        <br><br>
-      </div>
-      
-      <div class="col-sm-6">
         
         Time Remaining : <span id="timer"></span><br><br> 
         Question: <span id="question"></span><br><br>
@@ -52,7 +27,7 @@
            <input type="radio" name="opt" value="3"><span id='option3'></span><br>   
         </form><br>
 -->
-        <div class="btn-group" data-toggle="buttons-radio">
+        <div class="btn-group-vertical" data-toggle="buttons-radio">
           <button type="button" class="btn btn-primary" value="0" id="opt0"><span id="option0"></button>
           <button type="button" class="btn btn-primary" value="1" id="opt1"><span id="option1"></button>
           <button type="button" class="btn btn-primary" value="2" id="opt2"> <span id="option2"></button>
@@ -62,9 +37,39 @@
 <!--        <button id="submit" type = "submit" class = "btn btn-success">Submit</button> -->
         <br><br>
         
-        Result : <span id="result"></span> 
+        <span id="result"></span> 
+
+        <div id="completedQuestions">
+          
+        </div>
 
       </div>
+
+      <div class="col-sm-6">
+
+<!--      <label for="usr"> My Name: </label>
+          <input type = "text" class="form-control" id="username" size = "30">  -->
+          <div class="panel panel-success">
+            <div class="panel-heading">My Name</div>
+            <div class="panel-body" id="username"></div>
+          </div>
+          
+<!--          Your Score : <span id="score"></span> -->
+          <br><br>
+
+          <div id="usersOnline">
+<!--          <select id="users-list" size="10"></select>   -->
+          <ul class="list-group" id="users-list">
+            <li class="list-group-item active">Users Ready</li>
+            
+          </ul>
+          </div>
+          <br><br>
+        
+          <button id="ready" type = "submit" class = "btn btn-success">Ready</button>
+          <br><br>
+      </div>
+      
     
     </div>
 

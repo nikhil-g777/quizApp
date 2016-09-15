@@ -1,36 +1,34 @@
 
-
-//Things to do :
-// Display the questions
-//Accept response and evaluate score accordingly
-//Go to next question
-//Display results at the end of the quiz
-
-//var schedule = require('node-schedule');
-
 io.socket.on('connect',function socketConnected(){
 			
+
 			var qnum = 0;
+			var previousAnswer ='';
 
 			var userName = prompt("Enter your Name");
 
-			if(userName!=='master'){
 
 
 				io.socket.put('/user/announce',{userName:userName},function(data){
 
 				window.me = data;
 
-				io.socket.get('/user',updateUserList);
+				io.socket.get('/user',function(users){
+					users.forEach(function(user){
+						if(user.ready == true){
+							addUser(user);
+						}
+					});
+
+				});
+			if(userName!=='master'){
 
 				displayUserName(data);
 
 				displayScore(data);
+			}
 				
 				});
-
-			}
-
 
 
 io.socket.on('user', function messageRecieved(message){
@@ -39,17 +37,19 @@ io.socket.on('user', function messageRecieved(message){
 
 	});
 
-
 	switch(message.verb){
 
 		case 'created':
-			addUser(message.data);
-			console.log('Message:'+message+'\n\n');
+			 addUser(message.data);
 			break;
 
 		case 'destroyed':
 			removeUser(message);
 			console.log('removing:'+message.id);
+			break;
+
+		case 'updated':
+			addUser(message.data);
 			break;
 
 		default:
@@ -71,28 +71,40 @@ io.socket.on('message',function(data){
     		$('#opt3').removeAttr('disabled');
 			
 
-			$('#question').html((data.qnum+1)+" / "+data.numOfQuestions+" ) "+data.record.theQuestion);
+			$('#question').html((data.qnum+1)+' ) '+data.record.theQuestion);
+
 			$('#option0').html(data.record.options[0]);
 			$('#option1').html(data.record.options[1]);
 			$('#option2').html(data.record.options[2]);
 			$('#option3').html(data.record.options[3]);
 
-			$('#submit').prop('disabled',false);
+			if(data.qnum!=0){
+
+				appendQuestion(data.prevQuestion,qnum);
+				 $("#answer_"+(qnum-1)).html(previousAnswer);
+				 previousAnswer = '';
+
+			}
+
 			$('#result').html('');
 
-			console.log('On Message');
+			console.log('On Question');
 
-			var time = 20;
+			var time = 15;
 		    var countdown = setInterval(function(){
 
 			 	$('#timer').html(time);
 
 				if(time == 0){
+				    $('#opt0').attr('disabled','disabled');
+				    $('#opt1').attr('disabled','disabled');
+				    $('#opt2').attr('disabled','disabled');
+				    $('#opt3').attr('disabled','disabled');
+
 
 					clearInterval(countdown);
 					qnum+=1;
-					io.socket.put('/question/nextQuestion',{qnum:qnum,numOfQuestions:data.numOfQuestions});
-				
+					io.socket.put('/user/emitReady');
 				}
 
 				time-=1;
@@ -104,90 +116,59 @@ io.socket.on('message',function(data){
 		case 'submitted':
 			console.log('\n\nAnswered by userid:'+data.userId);
 			console.log('result:'+data.result);
-
+			previousAnswer = data.userAnswer;
+			// $("#answer_0").html('efwf');
 			if(data.result){
-				    $('#opt0').attr('disabled','disabled');
+				  	$('#opt0').attr('disabled','disabled');
     				$('#opt1').attr('disabled','disabled');
     				$('#opt2').attr('disabled','disabled');
     				$('#opt3').attr('disabled','disabled');
-				if(window.me.id == data.userId){
-					$('#result').html('Correct!');
+//					$('#result').html('Correct!');
 					io.socket.put('/user/updateScore',function(updated){
-						displayScore(updated[0]);
+//						displayScore(updated[0]);
 
 					});
-				}
-				else{
-					$('#result').html('Answered first correctly by : '+data.userId);
-//					$('#'+data.userId+'_score').html()
-				}
 			}
-			else{
-				if(window.me.id == data.userId){
-					$('#opt0').attr('disabled','disabled');
-    				$('#opt1').attr('disabled','disabled');
-    				$('#opt2').attr('disabled','disabled');
-    				$('#opt3').attr('disabled','disabled');
-					$('#result').html('Wrong!');
-				}
-			}
-
+			// else{
+			// 		$('#result').html('Wrong!');
+			// }
+			
 			break;
 
 		case 'complete':
-			console.log('Reached Complete case');
-			var highestScore = 0;
-			var winner;
-			io.socket.get('/user',function(records){
-				console.log('\n\nGetting user data to compare scores\n\n');
-				records.forEach(function(data){
-					if(data.score>highestScore){
-						highestScore = data.score;
-						winner = data.name;
-						console.log('winner is' + winner);
-						console.log('score:'+highestScore);
-					}
-				});
-				$('#result').html('winner is '+winner);
+			console.log('Reached Complete case for user');
 
-			});
+				console.log('totalQuestions'+data.totalQuestions);
+				appendQuestion(data.prevQuestion,qnum);
+				$("#answer_"+(qnum-1)).html(previousAnswer);
+
+			var userId = window.me.id;
+			io.socket.get('/user/'+userId,function(records){
+
+				$('#result').html('Quiz is Complete ! \n\n');
+				$('#result').append('Your score is : '+records.score+' / '+data.totalQuestions);
+		 	});
+
 			break;
 	}
 		
 })
 
-$('#startQuiz').click(function(){
-	$('#startQuiz').prop('disabled',true);
-	io.socket.put('/question/startQuiz',{qnum:qnum});
+$('#ready').click(function(){
+	$('#ready').prop('disabled',true);
+	io.socket.put('/question/ready',{qnum:qnum});
 });
 
-$(".btn-group button").on("click", function(){
+$(".btn-group-vertical button").on("click", function(){
     var num = $(this).attr('value');
     io.socket.put('/question/submitted',{selectedOption:num,qnum:qnum});
+
     $('#opt0').attr('disabled','disabled');
     $('#opt1').attr('disabled','disabled');
     $('#opt2').attr('disabled','disabled');
     $('#opt3').attr('disabled','disabled');
 });
 
-// $('#submit').click(function(){
-
-// 	var sel = $('input[name = opt]:checked','#radioButtonsForm').val();
-// 	console.log('Selected Option:'+sel);
-// 	io.socket.put('/question/submitted',{selectedOption:sel,qnum:qnum});
-
-// });
-
-
-
 });
 
-//$('#update-name').click(updateUserName);
-
-// io.socket.on('disconnect',function socketDisconnected(){
-
-// 	console.log('User Disconnected');
-// 	alert('User has disconnected');
-
-// })
 
