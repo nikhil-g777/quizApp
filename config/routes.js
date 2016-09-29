@@ -34,10 +34,6 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  },
-
-  '/master' : {
-    view: 'master/masterpage'
   }
 
   /***************************************************************************

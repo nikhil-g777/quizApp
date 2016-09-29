@@ -133,21 +133,21 @@ module.exports.sockets = {
           if(err){
           return cb();
           }
+          if(user!=undefined){
+            User.destroy({id:user.id}).exec(function(err){
+              if(err){
+                return cb();
+              }
 
-          User.destroy({id:user.id}).exec(function(err){
-          if(err){
-          return cb();
+            User.publishDestroy(user.id);
+
+            });
           }
-
-        User.publishDestroy(user.id);
-
-      });
 
     });
 
-    }
-    catch(err){
-      console.log("no erroers now");
+    }catch(err){
+      console.log("The socket you're trying to remove is not a user");
     }
      // By default: do nothing.
      return cb();

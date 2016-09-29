@@ -34,10 +34,10 @@ module.exports.connections = {
 
   quiz_mongo:{
     adapter: 'sails-mongo',
-    host: 'nikhils-Macbook-Pro.local',
+//    host: 'nikhils-Macbook-Pro.local',
+    host:'localhost',
     port : 27017,
     database : 'quiz'
-
   }
 
   /***************************************************************************

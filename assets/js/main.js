@@ -8,8 +8,7 @@ io.socket.on('connect',function socketConnected(){
 			var userName = prompt("Enter your Name");
 
 
-
-				io.socket.put('/user/announce',{userName:userName},function(data){
+			io.socket.put('/user/announce',{userName:userName},function(data){
 
 				window.me = data;
 
@@ -135,8 +134,13 @@ io.socket.on('message',function(data){
 			
 			break;
 
+		case 'quizStarted' :
+				$('.row').remove();
+				$('#main').append('<p>Quiz has already Started ! </p>');
+				break;
+
 		case 'complete':
-			console.log('Reached Complete case for user');
+				console.log('Reached Complete case for user');
 
 				console.log('totalQuestions'+data.totalQuestions);
 				appendQuestion(data.prevQuestion,qnum);

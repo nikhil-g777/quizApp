@@ -5,7 +5,14 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var quiz_started = false;
+
 module.exports = {
+
+	'quizStarted' : function(req,res){
+
+		quiz_started = true;
+	},
 
 	'new':function(req,res){
 
@@ -49,38 +56,48 @@ module.exports = {
 
 	announce : function(req,res){
 
-		var socketId = sails.sockets.getId(req);
+		if(quiz_started){
 
-		console.log('Creating User !!! \n \n');
+			console.log('Quiz has already started !');
+			var socketId = sails.sockets.getId(req);
+			sails.sockets.broadcast(socketId,{identity:'quizStarted'});
 
-		var session = req.session;
+		}
 
-		session.users = session.users || {};
+		else{
 
-		User.create({ name:req.body.userName,
-					  socketId:socketId
-					}).exec(function(err,user){
-			if (err) {
-				return res.serverError(err);
-			}
+			var socketId = sails.sockets.getId(req);
 
-		console.log("user:"+user.name);
+			console.log('Creating User !!! \n \n');
 
-		session.users[socketId] = user;
+			var session = req.session;
 
-		User.subscribe(req,user);
+			session.users = session.users || {};
 
-		User.watch(req);
+			User.create({ name:req.body.userName,
+						  socketId:socketId
+						}).exec(function(err,user){
+				if (err) {
+					return res.serverError(err);
+				}
 
-		sails.sockets.join(req,'commonRoom');
+				console.log("user:"+user.name);
 
-//		User.publishCreate(user,req);
+				session.users[socketId] = user;
 
-		res.json(user)
+				User.subscribe(req,user);
 
-		sails.log('response sent');
-	});
+				User.watch(req);
 
+				sails.sockets.join(req,'commonRoom');
+
+		//		User.publishCreate(user,req);
+
+				res.json(user)
+
+				sails.log('response sent');
+			});
+		}
 	},
 
 	masterSubscribe : function(req,res){
@@ -90,6 +107,8 @@ module.exports = {
 		sails.sockets.join(req,'masterRoom');
 
 		User.watch(req);
+
+		quiz_started = false;
 	},
 
 	subscribeToInstance : function(req,res){
@@ -115,6 +134,4 @@ module.exports = {
 			console.log("All Users Destroyed !");
 		})
 	}
-
-
 }
